@@ -1,11 +1,16 @@
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
 const express = require('express');
 const mongoose = require('mongoose')
 const ShortUrl = require('./models/shortUrl')
 const app = express();
 
 
-
-mongoose.connect('mongodb://localhost/urlShortener')
+const uri = process.env.DB_URI || 'mongodb://localhost/urlShortener';
+mongoose.connect(uri);
+// mongoose.connect('mongodb://localhost/urlShortener')
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -20,7 +25,7 @@ app.use(express.urlencoded({ extended: false }))
 
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => { console.log('listening to port 3000'); })
+app.listen(port, () => { console.log(`Serving on the port ${port}`); })
 
 
 app.get('/', async (req, res) => {
